@@ -1,0 +1,19 @@
+{
+    "name": "kinulab/process-monitoring-bundle",
+    "description": "A simple monitoring service to check state of Process",
+    "type": "library",
+    "require": {
+        "symfony/process": "^3.4",
+        "symfony/monolog-bridge": "^3.4"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Johan Desmyter",
+            "email": "johan@etic.yt"
+        }
+    ],
+    "autoload": {
+        "psr-4": { "Kinulab\\ProcessMonitoringBundle\\": "" }
+    }
+}
