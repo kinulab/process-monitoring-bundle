@@ -8,19 +8,8 @@ use Symfony\Component\Validator\Validation;
 /**
  * Description of a monitored process
  */
-class ProcessDescriptor implements ProcessDescriptorInterface
+class ProcessDescriptor extends AbstractProcessDescriptor
 {
-    /**
-     * Process name (for humans)
-     *
-     * @var string
-     */
-    protected $name;
-
-    /**
-     * @var Process
-     */
-    protected $process;
 
     /**
      * Constraints that define in which conditions the process is allowed to be running
@@ -28,24 +17,6 @@ class ProcessDescriptor implements ProcessDescriptorInterface
      * @var array
      */
     protected $constraints;
-
-    /**
-     * Check interval in seconds
-     * @var int
-     */
-    protected $checkInterval = 60;
-
-    /**
-     * if the process should be automaticaly stared as long he's allowed to run
-     * @var bool
-     */
-    protected $explicitStart = false;
-
-    /**
-     * if the process should be automaticaly stopped when he's not allowed to run
-     * @var bool
-     */
-    protected $explicitStop = false;
 
     /**
      *
@@ -57,11 +28,6 @@ class ProcessDescriptor implements ProcessDescriptorInterface
         $this->name = $name;
         $this->process = $process;
         $this->constraints = $constraints;
-    }
-
-    public function getName() :string
-    {
-        return $this->name;
     }
 
     /**
@@ -76,15 +42,6 @@ class ProcessDescriptor implements ProcessDescriptorInterface
     }
 
     /**
-     *
-     * @return bool
-     */
-    public function getExplicitStart() :bool
-    {
-        return $this->explicitStart;
-    }
-
-    /**
      * Define that the process must be stopped explicitly if he's running and not allowed to
      * @param bool $explicitStop
      */
@@ -92,15 +49,6 @@ class ProcessDescriptor implements ProcessDescriptorInterface
         $this->explicitStop = $explicitStop;
 
         return $this;
-    }
-
-    /**
-     *
-     * @return boo
-     */
-    public function getExplicitStop() :bool
-    {
-        return $this->explicitStop;
     }
 
     /**
@@ -115,15 +63,6 @@ class ProcessDescriptor implements ProcessDescriptorInterface
     }
 
     /**
-     *
-     * @return int
-     */
-    public function getCheckInterval() :int
-    {
-        return $this->checkInterval;
-    }
-
-    /**
      * Valid the constraints to define if the process is allowed to run
      * @return bool
      */
@@ -133,11 +72,6 @@ class ProcessDescriptor implements ProcessDescriptorInterface
         $violations = $validator->validate($this, $this->constraints);
 
         return 0 === count($violations);
-    }
-
-    public function getProcess(): Process
-    {
-        return $this->process;
     }
 
 }

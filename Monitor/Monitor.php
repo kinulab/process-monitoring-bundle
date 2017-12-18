@@ -72,13 +72,21 @@ class Monitor
             throw new \Exception($message);
         }
 
+        $processes = [];
         foreach($this->processes as $i => $process){
             if(!$process instanceof ProcessDescriptorInterface){
                 $message = "The process must implements ".ProcessDescriptorInterface::class." : ".get_class($process)." given";
                 $this->logger->error($message);
                 throw new \Exception($message);
             }
-            $process->check();
+
+            $processes[$i] = $process;
+        }
+        // We overwrite the Generator to get a classic array
+        $this->processes = $processes;
+
+        foreach($this->processes as $i => $process){
+            $this->checkProcess($process);
             $this->planification[$i] = time()+$process->getCheckInterval();
         }
     }
@@ -90,7 +98,6 @@ class Monitor
         foreach($this->planification as $i => $time){
             if($time >= time()){
                 $this->checkProcess($this->processes[$i]);
-                $this->processes[$i]->check();
                 $this->planification[$i] = time()+$this->processes[$i]->getCheckInterval();
             }
         }
