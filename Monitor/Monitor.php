@@ -1,4 +1,5 @@
 <?php
+declare(ticks = 1);
 
 namespace Kinulab\ProcessMonitoringBundle\Monitor;
 
@@ -28,6 +29,8 @@ class Monitor
      */
     protected $logger;
 
+    protected $running;
+
     /**
      *
      * @param iterable $processes
@@ -48,17 +51,39 @@ class Monitor
             $this->logger->info("Unable to rename process to 'kinulab_monitoring'.");
         }
 
+        pcntl_signal(SIGINT, [$this, 'stopServices']);
+        pcntl_signal(SIGTERM, [$this, 'stopServices']);
+
+        $this->running = true;
         $this->startPanification();
 
-        while(1){
+        while($this->running){
+            $this->check();
+
             $sleep = min($this->planification) - time();
             if($sleep > 0){
                 sleep( $sleep );
             }else{
                 sleep(10);
             }
+        }
+    }
 
-            $this->check();
+    protected function stopServices($sig){
+        $this->running = false;
+        switch ($sig){
+            case SIGINT:
+                $this->logger->notice("Interrupt signal catch. Stopping process...");
+                break;
+            case SIGTERM:
+                $this->logger->notice("Termination signal catch. Stopping process...");
+                break;
+        }
+
+        foreach($this->processes as $processDescriptor){
+            if($processDescriptor->getProcess()->isRunning()){
+                $processDescriptor->getProcess()->stop();
+            }
         }
     }
 
