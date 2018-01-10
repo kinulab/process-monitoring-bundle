@@ -17,8 +17,17 @@ class MonitorProcessCommand extends ContainerAwareCommand {
     }
 
     protected function execute(InputInterface $input, OutputInterface $output) {
-        $monitor = $this->getContainer()->get(Monitor::class);
-        $monitor->startMonitoring();
+
+        $pid = pcntl_fork();
+        if ($pid == -1) {
+             die('could not fork');
+        } else if ($pid) {
+            $output->writeln("Monitoring started [<info>OK</info>]");
+        } else {
+            $monitor = $this->getContainer()->get(Monitor::class);
+            $monitor->startMonitoring();
+        }
+
     }
 
 }

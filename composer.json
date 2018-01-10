@@ -4,7 +4,8 @@
     "type": "library",
     "require": {
         "symfony/process": "^3.4",
-        "symfony/monolog-bridge": "^3.4"
+        "symfony/monolog-bridge": "^3.4",
+        "symfony/event-dispatcher": "^3.4"
     },
     "license": "MIT",
     "authors": [

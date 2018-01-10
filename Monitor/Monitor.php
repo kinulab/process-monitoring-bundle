@@ -5,6 +5,7 @@ namespace Kinulab\ProcessMonitoringBundle\Monitor;
 
 use Kinulab\ProcessMonitoringBundle\Process\ProcessDescriptorInterface;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Monitoring service that check described process
@@ -29,22 +30,26 @@ class Monitor
      */
     protected $logger;
 
+    protected $dispatcher;
+
     protected $running;
 
     /**
      *
      * @param iterable $processes
      */
-    public function __construct($processes, LoggerInterface $logger)
+    public function __construct($processes, LoggerInterface $logger, EventDispatcherInterface $dispatcher)
     {
         $this->processes = $processes;
         $this->logger = $logger;
+        $this->dispatcher = $dispatcher;
     }
 
     /**
      * Start monitoring process
      */
     public function startMonitoring(){
+        $this->dispatcher->dispatch('process_monitoring.starting');
         $this->logger->notice("Starting of process monitoring");
 
         if(!cli_set_process_title("kinulab_monitoring")){
@@ -57,6 +62,7 @@ class Monitor
         $this->running = true;
         $this->startPanification();
 
+        $this->dispatcher->dispatch('process_monitoring.started');
         while($this->running){
             $this->check();
 
@@ -70,6 +76,8 @@ class Monitor
     }
 
     protected function stopServices($sig){
+        $this->dispatcher->dispatch('process_monitoring.stopping');
+
         $this->running = false;
         switch ($sig){
             case SIGINT:
@@ -85,6 +93,8 @@ class Monitor
                 $processDescriptor->getProcess()->stop();
             }
         }
+
+        $this->dispatcher->dispatch('process_monitoring.stopped');
     }
 
     /**
