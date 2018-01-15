@@ -1,5 +1,7 @@
 # Monitoring process Bundle
 
+[![Build Status](https://travis-ci.org/kinulab/process-monitoring-bundle.svg?branch=master)](https://travis-ci.org/kinulab/process-monitoring-bundle)
+
 This bundle try to solve the following problem
 
 ```
@@ -44,8 +46,8 @@ add in your `app/AppKernel.php` :
 
 Register a service that implements the `Kinulab\ProcessMonitoringBundle\Process\ProcessDescriptorInterface`.
 
-Tag this service as `monitor.process`. 
+Tag this service as `monitor.process`.
 
-Then ensure yourself that the `bin/console monitor:process` command 
-is constantly running. For that, you can use cron, monit, supervisord 
+Then ensure yourself that the `bin/console monitor:process` command
+is constantly running. For that, you can use cron, monit, supervisord
 or whatever you prefer to use.
