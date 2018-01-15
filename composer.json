@@ -7,6 +7,9 @@
         "symfony/monolog-bridge": "^3.4",
         "symfony/event-dispatcher": "^3.4"
     },
+    "require-dev": {
+        "symfony/phpunit-bridge": "^3.4"
+    },
     "license": "MIT",
     "authors": [
         {
