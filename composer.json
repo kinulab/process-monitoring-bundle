@@ -5,7 +5,8 @@
     "require": {
         "symfony/process": "^3.4",
         "symfony/monolog-bridge": "^3.4",
-        "symfony/event-dispatcher": "^3.4"
+        "symfony/event-dispatcher": "^3.4",
+        "mtdowling/cron-expression": "^1.2"
     },
     "require-dev": {
         "symfony/phpunit-bridge": "^3.4"
