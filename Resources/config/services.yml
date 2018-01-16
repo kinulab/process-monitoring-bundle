@@ -8,4 +8,4 @@ services:
     Kinulab\ProcessMonitoringBundle\Monitor\:
         resource: '../../Monitor/*'
         arguments:
-            $processes: !tagged monitor.process
+            $services: !tagged monitored.service

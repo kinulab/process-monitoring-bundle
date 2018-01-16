@@ -1,29 +1,29 @@
 <?php
 
-namespace Kinulab\ProcessMonitoringBundle\Process;
+namespace Kinulab\ProcessMonitoringBundle\Service;
 
 use Symfony\Component\Process\Process;
 
 /**
- * Interface for described process to monitor
+ * Interface to describe a service to monitor
  */
-interface ProcessDescriptorInterface
+interface ServiceDescriptorInterface
 {
 
     /**
-     * Get human name to describe the process
+     * Get human name to describe the service
      */
     public function getName() :string;
 
     /**
-     * Define if the process must be always started when allowed to run
+     * Define if the service must be always started when allowed to run
      * @return bool
      */
     public function getExplicitStart() :bool;
 
 
     /**
-     * Define if the process must be stopped explicitly if he's running and not allowed to
+     * Define if the service must be stopped explicitly if he's running and not allowed to
      * @return bool
      */
     public function getExplicitStop() :bool;
@@ -36,13 +36,13 @@ interface ProcessDescriptorInterface
     public function getCheckInterval() :int;
 
     /**
-     * Valid if the process is allowed to run
+     * Valid if the service is allowed to run
      * @return bool
      */
     public function allowedToBeRunning() :bool;
 
     /**
-     * Get the described process
+     * Get the described service
      * @retourn Process
      */
     public function getProcess() :Process;

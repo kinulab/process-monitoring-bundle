@@ -1,14 +1,15 @@
 <?php
 
-namespace Kinulab\ProcessMonitoringBundle\Process;
+namespace Kinulab\ProcessMonitoringBundle\Service;
 
 use Symfony\Component\Process\Process;
 
 /**
- * Abstract Description of a monitored process
+ * Abstract Description of a monitored service
  */
-abstract class AbstractProcessDescriptor implements ProcessDescriptorInterface
+abstract class AbstractServiceDescriptor implements ServiceDescriptorInterface
 {
+
     /**
      * Process name (for humans)
      *
@@ -17,24 +18,29 @@ abstract class AbstractProcessDescriptor implements ProcessDescriptorInterface
     protected $name;
 
     /**
+     * The process to be running
+     *
      * @var Process
      */
     protected $process;
 
     /**
      * Check interval in seconds
+     *
      * @var int
      */
     protected $checkInterval = 60;
 
     /**
      * if the process should be automaticaly stared as long he's allowed to run
+     *
      * @var bool
      */
     protected $explicitStart = false;
 
     /**
      * if the process should be automaticaly stopped when he's not allowed to run
+     *
      * @var bool
      */
     protected $explicitStop = false;
@@ -42,19 +48,21 @@ abstract class AbstractProcessDescriptor implements ProcessDescriptorInterface
 
     /**
      * Valid the constraints to define if the process is allowed to run
+     *
      * @return bool
      */
     abstract public function allowedToBeRunning() :bool;
 
-
+    /**
+     * {@inheritdoc}
+     */
     public function getName() :string
     {
         return $this->name;
     }
 
     /**
-     *
-     * @return bool
+     * {@inheritdoc}
      */
     public function getExplicitStart() :bool
     {
@@ -62,8 +70,7 @@ abstract class AbstractProcessDescriptor implements ProcessDescriptorInterface
     }
 
     /**
-     *
-     * @return boo
+     * {@inheritdoc}
      */
     public function getExplicitStop() :bool
     {
@@ -71,14 +78,16 @@ abstract class AbstractProcessDescriptor implements ProcessDescriptorInterface
     }
 
     /**
-     *
-     * @return int
+     * {@inheritdoc}
      */
     public function getCheckInterval() :int
     {
         return $this->checkInterval;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getProcess(): Process
     {
         return $this->process;

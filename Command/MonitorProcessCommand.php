@@ -11,8 +11,8 @@ class MonitorProcessCommand extends ContainerAwareCommand {
 
     protected function configure() {
         $this
-                ->setName('monitor:process')
-                ->setDescription('Start monitoring process')
+                ->setName('monitor:services')
+                ->setDescription('Start the monitoring of services')
         ;
     }
 

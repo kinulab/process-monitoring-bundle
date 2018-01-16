@@ -13,13 +13,13 @@ running it must be stopped.
 
 We can do it with cron but that need a few lines :
 
-* to start the process,
+* to start the service,
 * stop it at the end of day,
-* check every minute from 7am to 7pm that the process is running,
-* then check every minutes from 7pm to 7am that the process is
+* check every minute from 7am to 7pm that the service is running,
+* then check every minutes from 7pm to 7am that the service is
 not running.
 
-If there is only one process like that, it's ok. But when there is
+If there is only one service like that, it's ok. But when there is
 more, it become hard to maintain.
 
 
@@ -44,10 +44,10 @@ add in your `app/AppKernel.php` :
 
 ## How to use it ?
 
-Register a service that implements the `Kinulab\ProcessMonitoringBundle\Process\ProcessDescriptorInterface`.
+Register a symfony service that implements the `Kinulab\ProcessMonitoringBundle\Service\ServiceDescriptorInterface`.
 
-Tag this service as `monitor.process`.
+Tag this service as `monitored.service`.
 
-Then ensure yourself that the `bin/console monitor:process` command
+Then ensure yourself that the `bin/console monitor:services` command
 is constantly running. For that, you can use cron, monit, supervisord
 or whatever you prefer to use.

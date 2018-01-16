@@ -1,18 +1,18 @@
 <?php
 
-namespace Kinulab\ProcessMonitoringBundle\Process;
+namespace Kinulab\ProcessMonitoringBundle\Service;
 
 use Symfony\Component\Process\Process;
 use Symfony\Component\Validator\Validation;
 
 /**
- * Description of a monitored process
+ * Description of a monitored service
  */
-class ProcessDescriptor extends AbstractProcessDescriptor
+class ServiceDescriptor extends AbstractServiceDescriptor
 {
 
     /**
-     * Constraints that define in which conditions the process is allowed to be running
+     * Constraints that define in which conditions the service is allowed to be running
      *
      * @var array
      */
@@ -31,7 +31,7 @@ class ProcessDescriptor extends AbstractProcessDescriptor
     }
 
     /**
-     * Define that the process must be started explicitly if he's not running but allowed to
+     * Define that the service must be started explicitly if he's not running but allowed to
      * @param bool $explicitStart
      * @return $this
      */
@@ -42,7 +42,7 @@ class ProcessDescriptor extends AbstractProcessDescriptor
     }
 
     /**
-     * Define that the process must be stopped explicitly if he's running and not allowed to
+     * Define that the service must be stopped explicitly if he's running and not allowed to
      * @param bool $explicitStop
      */
     public function setExplicitStop(bool $explicitStop){
@@ -52,8 +52,9 @@ class ProcessDescriptor extends AbstractProcessDescriptor
     }
 
     /**
+     * Define at witch frequency the monitor must check the state of the process
      *
-     * @param int $interval
+     * @param int $interval in seconds
      * @return $this
      */
     public function setCheckInterval(int $interval){
@@ -63,7 +64,7 @@ class ProcessDescriptor extends AbstractProcessDescriptor
     }
 
     /**
-     * Valid the constraints to define if the process is allowed to run
+     * Valid the constraints to define if the service is allowed to run
      * @return bool
      */
     public function allowedToBeRunning() :bool

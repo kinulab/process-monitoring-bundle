@@ -1,18 +1,18 @@
 <?php
 
-namespace Kinulab\ProcessMonitoringBundle\Tests\Process;
+namespace Kinulab\ProcessMonitoringBundle\Tests\Service;
 
-use Kinulab\ProcessMonitoringBundle\Process\ProcessDescriptor;
+use Kinulab\ProcessMonitoringBundle\Service\ServiceDescriptor;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Process\Process;
 
-class ProcessDescriptorTest extends TestCase
+class ServiceDescriptorTest extends TestCase
 {
 
     public function testGettersSetters(){
         $symfonyProcess = $this->createMock(Process::class);
 
-        $process = new ProcessDescriptor('test', $symfonyProcess);
+        $process = new ServiceDescriptor('test', $symfonyProcess);
         $process->setExplicitStart(true);
         $process->setExplicitStop(true);
         $process->setCheckInterval(10);

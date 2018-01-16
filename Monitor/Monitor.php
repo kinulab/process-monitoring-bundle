@@ -38,9 +38,9 @@ class Monitor
      *
      * @param iterable $processes
      */
-    public function __construct($processes, LoggerInterface $logger, EventDispatcherInterface $dispatcher)
+    public function __construct($services, LoggerInterface $logger, EventDispatcherInterface $dispatcher)
     {
-        $this->processes = $processes;
+        $this->processes = $services;
         $this->logger = $logger;
         $this->dispatcher = $dispatcher;
     }
