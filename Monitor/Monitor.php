@@ -114,7 +114,7 @@ class Monitor
     }
 
     /**
-     * Start necessary services and register planification
+     * Analyse every service and define next check time
      */
     protected function startPanification(){
         if(0 === count($this->services)){
@@ -137,8 +137,11 @@ class Monitor
         $this->services = $services;
 
         foreach($this->services as $i => $service){
-            $this->checkProcess($service);
-            $this->planification[$i] = time()+$service->getCheckInterval();
+            if($this->mustBeStarted($service) || $this->mustBeStopped($service)){
+                $this->planification[$i] = time();
+            }else{
+                $this->planification[$i] = time()+$service->getCheckInterval();
+            }
         }
     }
 
@@ -147,7 +150,7 @@ class Monitor
      */
     protected function check(){
         foreach($this->planification as $i => $time){
-            if($time >= time()){
+            if($time <= time()){
                 $this->checkService($this->services[$i]);
                 $this->planification[$i] = time()+$this->services[$i]->getCheckInterval();
             }
@@ -158,12 +161,36 @@ class Monitor
      * Check if the service should be started/stopped
      */
     protected function checkService(ServiceDescriptorInterface $serviceDescriptor){
-        if($serviceDescriptor->getExplicitStart() && $serviceDescriptor->allowedToBeRunning() && !$serviceDescriptor->isRunning()){
+        if($this->mustBeStarted($serviceDescriptor)){
             $this->logger->info("Starting service : ".$serviceDescriptor->getName());
             $serviceDescriptor->start();
-        }elseif($serviceDescriptor->getExplicitStop() && !$serviceDescriptor->allowedToBeRunning() && $serviceDescriptor->isRunning()){
+        }elseif($this->mustBeStopped($serviceDescriptor)){
             $this->logger->info("Stopping service : ".$serviceDescriptor->getName());
             $serviceDescriptor->stop();
         }
+    }
+
+    /**
+     * Test if a service must be started
+     * @param ServiceDescriptorInterface $serviceDescriptor
+     * @return bool
+     */
+    protected function mustBeStarted(ServiceDescriptorInterface $serviceDescriptor) :bool
+    {
+        return $serviceDescriptor->getExplicitStart()
+                && $serviceDescriptor->allowedToBeRunning()
+                && !$serviceDescriptor->isRunning();
+    }
+
+    /**
+     * Test if a service must be stopped
+     * @param ServiceDescriptorInterface $serviceDescriptor
+     * @return bool
+     */
+    protected function mustBeStopped(ServiceDescriptorInterface $serviceDescriptor) :bool
+    {
+        return $serviceDescriptor->getExplicitStop()
+                && !$serviceDescriptor->allowedToBeRunning()
+                && $serviceDescriptor->isRunning();
     }
 }
