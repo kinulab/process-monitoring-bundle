@@ -44,7 +44,7 @@ class TaskDescriptor extends AbstractTaskDescriptor {
      * Get the next runAt date
      * @return DateTime
      */
-    private function getNextRunAtDate(): DateTime {
+    private function getNextRunAtDate(): \DateTime {
         $dates = $this->getRunAtDates();
         if (empty($dates)) {
             return null;
@@ -104,7 +104,7 @@ class TaskDescriptor extends AbstractTaskDescriptor {
         });
     }
 
-    private function isConstraintsValidated() {
+    private function isConstraintsValidated() : bool {
 
         $validator = Validation::createValidator();
         $violations = $validator->validate($this, $this->constraints);
