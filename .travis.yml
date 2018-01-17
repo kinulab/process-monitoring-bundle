@@ -11,7 +11,9 @@ env:
 
 before_script:
   - composer config -g github-oauth.github.com ${OAUTHTOKEN}
-  - composer require symfony/symfony:${SYMFONY_VERSION} --no-update
+  - composer require symfony/process:${SYMFONY_VERSION} --no-update
+  - composer require symfony/monolog-bridge:${SYMFONY_VERSION} --no-update
+  - composer require symfony/event-dispatcher:${SYMFONY_VERSION} --no-update
   - composer update --prefer-dist --no-interaction --prefer-stable
 
 script: phpunit
