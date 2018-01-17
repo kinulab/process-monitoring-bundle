@@ -88,9 +88,33 @@ abstract class AbstractServiceDescriptor implements ServiceDescriptorInterface
     /**
      * {@inheritdoc}
      */
-    public function getProcess(): Process
+    public function getProcess() :Process
     {
         return $this->process;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isRunning() :bool
+    {
+        return $this->process->isRunning();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function start()
+    {
+        $this->process->start();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function stop()
+    {
+        $this->process->stop();
     }
 
 }

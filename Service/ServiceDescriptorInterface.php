@@ -47,4 +47,20 @@ interface ServiceDescriptorInterface
      */
     public function getProcess() :Process;
 
+    /**
+     * Get the running state of the process
+     * @return bool
+     */
+    public function isRunning() :bool;
+
+    /**
+     * Start the service
+     */
+    public function start();
+
+    /**
+     * Stop the service
+     */
+    public function stop();
+
 }

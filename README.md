@@ -51,3 +51,18 @@ Tag this service as `monitored.service`.
 Then ensure yourself that the `bin/console monitor:services` command
 is constantly running. For that, you can use cron, monit, supervisord
 or whatever you prefer to use.
+
+
+## Usage
+
+### Events
+
+During the monitoring, some event are dispatched :
+
+| Event                          | Description                                                                     |
+|--------------------------------|---------------------------------------------------------------------------------|
+| `monitoring.services.starting` | When the monitor has been requested to start, but still did nothing             |
+| `monitoring.services.started`  | When the monitor has checked for the first time each services for planification |
+| `monitoring.services.stopping` | When the monitor has been requested to stop, but still did nothing              |
+| `monitoring.services.stopped`  | When the monitor has stopped every services                                     |
+

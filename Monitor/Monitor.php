@@ -1,26 +1,30 @@
 <?php
+
+// Necessary to catch SIGINT and SIGTERM
 declare(ticks = 1);
 
 namespace Kinulab\ProcessMonitoringBundle\Monitor;
 
-use Kinulab\ProcessMonitoringBundle\Process\ProcessDescriptorInterface;
+use Kinulab\ProcessMonitoringBundle\Service\ServiceDescriptorInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
- * Monitoring service that check described process
+ * Service that monitor monitored.services
  */
 class Monitor
 {
 
     /**
-     * list of described process
+     * list of monitored services
+     *
      * @var iterable
      */
-    protected $processes;
+    protected $services;
 
     /**
      * Planification of checks
+     *
      * @var array
      */
     protected $planification = [];
@@ -30,27 +34,39 @@ class Monitor
      */
     protected $logger;
 
+    /**
+     * Event dispatcher
+     *
+     * @var EventDispatcherInterface
+     */
     protected $dispatcher;
 
+    /**
+     * Is the monitoring running or not ?
+     *
+     * @var bool
+     */
     protected $running;
 
     /**
      *
-     * @param iterable $processes
+     * @param iterable $services
+     * @param LoggerInterface $logger
+     * @param EventDispatcherInterface $dispatcher
      */
     public function __construct($services, LoggerInterface $logger, EventDispatcherInterface $dispatcher)
     {
-        $this->processes = $services;
+        $this->services = $services;
         $this->logger = $logger;
         $this->dispatcher = $dispatcher;
     }
 
     /**
-     * Start monitoring process
+     * Start monitoring services
      */
     public function startMonitoring(){
-        $this->dispatcher->dispatch('process_monitoring.starting');
-        $this->logger->notice("Starting of process monitoring");
+        $this->dispatcher->dispatch('monitoring.services.starting');
+        $this->logger->notice("Starting monitoring the services");
 
         if(!cli_set_process_title("kinulab_monitoring")){
             $this->logger->info("Unable to rename process to 'kinulab_monitoring'.");
@@ -62,7 +78,7 @@ class Monitor
         $this->running = true;
         $this->startPanification();
 
-        $this->dispatcher->dispatch('process_monitoring.started');
+        $this->dispatcher->dispatch('monitoring.services.started');
         while($this->running){
             $this->check();
 
@@ -76,79 +92,78 @@ class Monitor
     }
 
     protected function stopServices($sig){
-        $this->dispatcher->dispatch('process_monitoring.stopping');
+        $this->dispatcher->dispatch('monitoring.services.stopping');
 
         $this->running = false;
         switch ($sig){
             case SIGINT:
-                $this->logger->notice("Interrupt signal catch. Stopping process...");
+                $this->logger->notice("Interrupt signal catch. Stopping services...");
                 break;
             case SIGTERM:
-                $this->logger->notice("Termination signal catch. Stopping process...");
+                $this->logger->notice("Termination signal catch. Stopping services...");
                 break;
         }
 
-        foreach($this->processes as $processDescriptor){
-            if($processDescriptor->getProcess()->isRunning()){
-                $processDescriptor->getProcess()->stop();
+        foreach($this->services as $serviceDescriptor){
+            if($serviceDescriptor->isRunning()){
+                $serviceDescriptor->stop();
             }
         }
 
-        $this->dispatcher->dispatch('process_monitoring.stopped');
+        $this->dispatcher->dispatch('monitoring.services.stopped');
     }
 
     /**
-     * Start necessary process and register planification
+     * Start necessary services and register planification
      */
     protected function startPanification(){
-        if(0 === count($this->processes)){
-            $message = "There is no process registered, there is nothing to do.";
+        if(0 === count($this->services)){
+            $message = "There is no services registered, there is nothing to do.";
             $this->logger->error($message);
             throw new \Exception($message);
         }
 
-        $processes = [];
-        foreach($this->processes as $i => $process){
-            if(!$process instanceof ProcessDescriptorInterface){
-                $message = "The process must implements ".ProcessDescriptorInterface::class." : ".get_class($process)." given";
+        $services = [];
+        foreach($this->services as $i => $service){
+            if(!$service instanceof ServiceDescriptorInterface){
+                $message = "The service must implements ".ServiceDescriptorInterface::class." : ".get_class($service)." given";
                 $this->logger->error($message);
                 throw new \Exception($message);
             }
 
-            $processes[$i] = $process;
+            $services[$i] = $service;
         }
         // We overwrite the Generator to get a classic array
-        $this->processes = $processes;
+        $this->services = $services;
 
-        foreach($this->processes as $i => $process){
-            $this->checkProcess($process);
-            $this->planification[$i] = time()+$process->getCheckInterval();
+        foreach($this->services as $i => $service){
+            $this->checkProcess($service);
+            $this->planification[$i] = time()+$service->getCheckInterval();
         }
     }
 
     /**
-     * Check process based on planification
+     * Check service based on planification
      */
     protected function check(){
         foreach($this->planification as $i => $time){
             if($time >= time()){
-                $this->checkProcess($this->processes[$i]);
-                $this->planification[$i] = time()+$this->processes[$i]->getCheckInterval();
+                $this->checkService($this->services[$i]);
+                $this->planification[$i] = time()+$this->services[$i]->getCheckInterval();
             }
         }
     }
 
     /**
-     * Check if the process should be started/stopped
+     * Check if the service should be started/stopped
      */
-    protected function checkProcess(ProcessDescriptorInterface $processDescriptor){
-        $process = $processDescriptor->getProcess();
-        if($processDescriptor->getExplicitStart() && $processDescriptor->allowedToBeRunning() && !$process->isRunning()){
-            $this->logger->info("Starting process : ".$processDescriptor->getName());
-            $process->start();
-        }elseif($processDescriptor->getExplicitStop() && !$processDescriptor->allowedToBeRunning() && $process->isRunning()){
-            $this->logger->info("Stopping process : ".$processDescriptor->getName());
-            $process->stop();
+    protected function checkService(ServiceDescriptorInterface $serviceDescriptor){
+        if($serviceDescriptor->getExplicitStart() && $serviceDescriptor->allowedToBeRunning() && !$serviceDescriptor->isRunning()){
+            $this->logger->info("Starting service : ".$serviceDescriptor->getName());
+            $serviceDescriptor->start();
+        }elseif($serviceDescriptor->getExplicitStop() && !$serviceDescriptor->allowedToBeRunning() && $serviceDescriptor->isRunning()){
+            $this->logger->info("Stopping service : ".$serviceDescriptor->getName());
+            $serviceDescriptor->stop();
         }
     }
 }
