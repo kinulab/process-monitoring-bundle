@@ -1,13 +1,10 @@
 <?php
 
-
 namespace Kinulab\ProcessMonitoringBundle\Process\Task;
 
 use Cron\CronExpression;
 
 /**
- * Description of TaskDescriptor
- *
  * @author marc
  */
 abstract class AbstractTaskDescriptor {
@@ -68,7 +65,7 @@ abstract class AbstractTaskDescriptor {
         return $this->process;
     }
 
-    function getCron(): \Cron\CronExpression {
+    function getCron(): CronExpression {
         return $this->cron;
     }
 
@@ -84,19 +81,24 @@ abstract class AbstractTaskDescriptor {
         return $this->retryCount;
     }
 
+    /**
+     * Get the etry interval in seconds
+     * @return int
+     * 
+     */
     public function getRetryInterval(): int {
         return $this->retryInterval;
     }
 
     /**
-     * Get information about the tqsk execution
+     * Get information about the task execution
      *
      * @return bool
      */
     abstract public function getStatus();
 
     /**
-     * Valid the constraints to define if the process is allowed to run
+     * Get the next exectution time of the process
      *
      * @return bool
      */
