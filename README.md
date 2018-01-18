@@ -1,6 +1,7 @@
 # Monitoring process Bundle
 
 [![Build Status](https://travis-ci.org/kinulab/process-monitoring-bundle.svg?branch=master)](https://travis-ci.org/kinulab/process-monitoring-bundle)
+[![Coverage Status](https://coveralls.io/repos/github/kinulab/process-monitoring-bundle/badge.svg?branch=master)](https://coveralls.io/github/kinulab/process-monitoring-bundle?branch=master)
 
 This bundle try to solve the following problem
 

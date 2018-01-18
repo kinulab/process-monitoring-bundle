@@ -15,5 +15,10 @@ before_script:
   - composer require symfony/monolog-bridge:${SYMFONY_VERSION} --no-update
   - composer require symfony/event-dispatcher:${SYMFONY_VERSION} --no-update
   - composer update --prefer-dist --no-interaction --prefer-stable
+  - wget https://github.com/php-coveralls/php-coveralls/releases/download/v2.0.0/php-coveralls.phar
+  - chmod +x php-coveralls.phar
 
 script: phpunit
+
+after_success:
+  - travis_retry php php-coveralls.phar -v
