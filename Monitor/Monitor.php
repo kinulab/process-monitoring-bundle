@@ -131,7 +131,7 @@ class Monitor
      */
     protected function check(){
         foreach($this->planification as $i => $time){
-            if($time >= time()){
+            if($time <= time()){
                 $this->checkProcess($this->processes[$i]);
                 $this->planification[$i] = time()+$this->processes[$i]->getCheckInterval();
             }
