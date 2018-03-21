@@ -5,6 +5,10 @@ services:
         autoconfigure: true
         public: true
 
+    Kinulab\ProcessMonitoringBundle\Command\:
+        resource: '../../Command/*'
+        tags: [ 'console.command' ]
+
     Kinulab\ProcessMonitoringBundle\Monitor\:
         resource: '../../Monitor/*'
         arguments:

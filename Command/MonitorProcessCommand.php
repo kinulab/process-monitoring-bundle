@@ -3,11 +3,21 @@
 namespace Kinulab\ProcessMonitoringBundle\Command;
 
 use Kinulab\ProcessMonitoringBundle\Monitor\Monitor;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class MonitorProcessCommand extends ContainerAwareCommand {
+class MonitorProcessCommand extends Command {
+
+    protected $monitor;
+
+
+    public function __construct(Monitor $monitor)
+    {
+        $this->monitor = $monitor;
+
+        parent::__construct();
+    }
 
     protected function configure() {
         $this
@@ -24,8 +34,7 @@ class MonitorProcessCommand extends ContainerAwareCommand {
         } else if ($pid) {
             $output->writeln("Monitoring started [<info>OK</info>]");
         } else {
-            $monitor = $this->getContainer()->get(Monitor::class);
-            $monitor->startMonitoring();
+            $this->monitor->startMonitoring();
         }
 
     }
