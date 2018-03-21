@@ -3,9 +3,9 @@
     "description": "A simple monitoring service to check state of Process",
     "type": "library",
     "require": {
-        "symfony/process": "^3.4",
-        "symfony/monolog-bridge": "^3.4",
-        "symfony/event-dispatcher": "^3.4",
+        "symfony/process": "^3.4||^4.0",
+        "symfony/monolog-bridge": "^3.4||^4.0",
+        "symfony/event-dispatcher": "^3.4||^4.0",
         "mtdowling/cron-expression": "^1.2"
     },
     "require-dev": {

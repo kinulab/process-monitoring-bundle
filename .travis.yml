@@ -5,9 +5,19 @@ sudo: false
 php:
     - 7.0
     - 7.1
+    - 7.2
 
 env:
   - SYMFONY_VERSION=3.4.*
+  - SYMFONY_VERSION=4.0.*
+  - SYMFONY_VERSION=4.1.*@dev
+
+matrix:
+  exclude:
+    - php: 7.0
+      env: SYMFONY_VERSION=4.0.*
+    - php: 7.0
+      env: SYMFONY_VERSION=4.1.*@dev
 
 before_script:
   - composer config -g github-oauth.github.com ${OAUTHTOKEN}
