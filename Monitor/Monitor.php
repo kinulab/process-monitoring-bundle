@@ -130,6 +130,7 @@ class Monitor
                 $this->logger->error($message);
                 throw new \Exception($message);
             }
+            $service->initialize();
 
             $services[$i] = $service;
         }

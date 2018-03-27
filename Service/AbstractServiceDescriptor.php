@@ -56,6 +56,11 @@ abstract class AbstractServiceDescriptor implements ServiceDescriptorInterface
     /**
      * {@inheritdoc}
      */
+    public function initialize() { }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getName() :string
     {
         return $this->name;

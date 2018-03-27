@@ -11,6 +11,11 @@ interface ServiceDescriptorInterface
 {
 
     /**
+     * Initialize the service before using it
+     */
+    public function initialize();
+
+    /**
      * Get human name to describe the service
      */
     public function getName() :string;
